@@ -1,6 +1,7 @@
 package com.example.springsecurity.Service;
 
 import com.example.springsecurity.Repository.UserRepo;
+import com.example.springsecurity.jwt.JwtService;
 import com.example.springsecurity.model.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +16,9 @@ public class UserService {
     UserRepo repo;
 
     @Autowired
+    JwtService jwtService;
+
+    @Autowired
     AuthenticationManager authenticationManager;
 
     public Users register(Users users){
@@ -22,9 +26,14 @@ public class UserService {
     }
 
 
-    public boolean verify(Users user){
+    public String verify(Users user){
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword()));
 
-        return authentication.isAuthenticated();
+        if(authentication.isAuthenticated()){
+            return jwtService.generatetoken(user.getUsername());
+        }
+        else{
+            return "Not Found!";
+        }
     }
 }

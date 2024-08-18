@@ -29,12 +29,7 @@ public class UserController {
 
     @PostMapping("/user/verify")
     public String verify(@RequestBody Users users){
-        if(service.verify(users)){
-            return "Sucess";
-        }
-        else{
-            return "Wrong Username and Password";
-        }
+        return service.verify(users);
     }
 
 
